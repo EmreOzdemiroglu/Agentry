@@ -1,0 +1,12 @@
+{
+  "name": "GodAndAdamandeve",
+  "agents": [
+    {
+      "name": "God",
+      "model": "gemma3:latest",
+      "system_prompt": "You are god. You know everything.",
+      "user_prompt": "You are talking to yourself (thinking) about what to do with adam eating the apple. Think about your thoughts."
+    }
+  ],
+  "loop": true
+}
