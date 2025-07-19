@@ -2,56 +2,60 @@ package main
 
 import (
 	"fmt"
-	// "os" // Removed as it's no longer used directly in main.go
-	"strings"
+
+	"agentic-creator/internal/config"
+	"agentic-creator/internal/models"
+	"agentic-creator/internal/services"
+	"agentic-creator/internal/ui"
 )
 
-// --- Structs moved to models.go ---
+// App holds all the application dependencies
+type App struct {
+	config           *config.Config
+	inputReader      *ui.InputReader
+	ollamaService    services.OllamaService
+	chainService     services.ChainService
+	executionService services.ExecutionService
+	logService       services.LogService
+}
 
-func main() {
-	fmt.Println("Welcome to the Agentic Structure Creator!")
+// NewApp creates a new application instance
+func NewApp() *App {
+	cfg := config.Default()
+	inputReader := ui.NewInputReader()
+	ollamaService := services.NewOllamaService(cfg)
+	chainService := services.NewChainService(cfg)
+	executionService := services.NewExecutionService(ollamaService)
+	logService := services.NewLogService(cfg)
 
-	for {
-		fmt.Println("\n--- Main Menu ---")
-		fmt.Println("  [C]reate New Agent Chain")
-		fmt.Println("  [L]oad Existing Agent Chain")
-		fmt.Println("  [Q]uit")
-		choice := strings.ToUpper(readInput("> "))
-
-		switch choice {
-		case "C":
-			createNewChain() // This function now implicitly asks to run after saving
-		case "L":
-			loadAndRunChain()
-		case "Q":
-			fmt.Println("Exiting.")
-			return
-		default:
-			fmt.Println("Invalid choice. Please enter C, L, or Q.")
-		}
+	return &App{
+		config:           cfg,
+		inputReader:      inputReader,
+		ollamaService:    ollamaService,
+		chainService:     chainService,
+		executionService: executionService,
+		logService:       logService,
 	}
 }
 
-// --- Functions moved to chain_ops.go ---
-// loadAndRunChain
-// createNewChain
-// addAgentInteractive
-// agentNameExists
-// runChain
-// editChain
+func main() {
+	_ = NewApp() // Initialize app (unused for now in this test version)
+	fmt.Println("Welcome to the Agentic Structure Creator!")
 
-// --- Functions moved to chain_io.go ---
-// findSavedChains
-// loadChain
-// saveChain
-// saveRunLog
-
-// --- Functions moved to ollama.go ---
-// listOllamaModels
-
-// --- Functions moved to utils.go ---
-// selectModel
-// readInput
-// displayChain
-
-// --- Potentially add other helper functions later --- 
+	// Test creating basic structures
+	agent := models.Agent{
+		Name:         "test",
+		Model:        "llama2",
+		SystemPrompt: "You are helpful",
+		UserPrompt:   "Help me",
+	}
+	
+	chain := models.AgentChain{
+		Name:   "test-chain",
+		Agents: []models.Agent{agent},
+		Loop:   false,
+	}
+	
+	fmt.Printf("Created chain: %s with %d agents\n", chain.Name, len(chain.Agents))
+	ui.DisplayChain(&chain)
+}

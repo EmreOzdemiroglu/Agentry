@@ -1,4 +1,4 @@
-package main
+package models
 
 // Agent defines the structure for a single agent in the chain
 type Agent struct {
@@ -15,7 +15,7 @@ type AgentChain struct {
 	Loop   bool    `json:"loop,omitempty"` // Added loop flag
 }
 
-// Ollama API Request Payload
+// OllamaRequest represents the API request payload for Ollama
 type OllamaRequest struct {
 	Model   string `json:"model"`
 	Prompt  string `json:"prompt"`
@@ -24,17 +24,17 @@ type OllamaRequest struct {
 	Context []int  `json:"context,omitempty"` // To hold context between calls if needed (optional for now)
 }
 
-// Ollama API Response Payload (when stream: false)
+// OllamaResponse represents the API response payload from Ollama (when stream: false)
 type OllamaResponse struct {
-	Model             string    `json:"model"`
-	CreatedAt         string `json:"created_at"`
-	Response          string    `json:"response"`
-	Done              bool      `json:"done"`
-	Context           []int     `json:"context"` // Context to pass back for subsequent requests
-	TotalDuration     int64     `json:"total_duration"`
-	LoadDuration      int64     `json:"load_duration"`
-	PromptEvalCount   int       `json:"prompt_eval_count"`
-	PromptEvalDuration int64     `json:"prompt_eval_duration"`
-	EvalCount         int       `json:"eval_count"`
-	EvalDuration      int64     `json:"eval_duration"`
-} 
+	Model              string `json:"model"`
+	CreatedAt          string `json:"created_at"`
+	Response           string `json:"response"`
+	Done               bool   `json:"done"`
+	Context            []int  `json:"context"` // Context to pass back for subsequent requests
+	TotalDuration      int64  `json:"total_duration"`
+	LoadDuration       int64  `json:"load_duration"`
+	PromptEvalCount    int    `json:"prompt_eval_count"`
+	PromptEvalDuration int64  `json:"prompt_eval_duration"`
+	EvalCount          int    `json:"eval_count"`
+	EvalDuration       int64  `json:"eval_duration"`
+}
